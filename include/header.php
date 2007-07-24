@@ -2,6 +2,7 @@
 <HEAD>
   <link rel="stylesheet" href="http://www.cocorahs.org/css/global.css" type="text/css" /> 
   <title>Iowa CoCoRaHS - Community Collaborative Rain, Hail &amp; Snow Network</title>
+  <link rel="stylesheet" type="text/css" href="<?php echo $rooturl; ?>/css/main.css" />
 </HEAD>
 
 	<body id="Body" bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
