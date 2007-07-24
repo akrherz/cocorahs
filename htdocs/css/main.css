@@ -1,0 +1,9 @@
+body {
+ width: 800px;
+}
+.sidebar-item ul{
+ margin-left: 0px;
+}
+h3 {
+ margin-top: 10px;
+}
