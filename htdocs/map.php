@@ -4,7 +4,7 @@ include("../config/settings.inc.php");
 include("$rootpath/include/forms.php");
 include("$rootpath/include/database.inc.php");
 include("$rootpath/include/network.php");
-dl("php_mapscript_4.10.2.so");
+dl("php_mapscript_461.so");
 
 $ERROR = "";
 $layers = isset($_GET["layers"]) ? $_GET["layers"] : Array();
