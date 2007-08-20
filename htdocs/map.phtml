@@ -1,0 +1,207 @@
+<?php
+$expiry = 60*60*24*100; // 100 days
+session_start();
+
+include("../config/settings.inc.php"); 
+include("$rootpath/include/forms.php");
+
+$ERROR = "";
+$layers = isset($_GET["layers"]) ? $_GET["layers"] : Array("obs");
+$year = isset($_GET["year"]) ? $_GET["year"] : date("Y");
+$month = isset($_GET["month"]) ? $_GET["month"] : date("m");
+$day = isset($_GET["day"]) ? $_GET["day"] : date("d");
+$extents = isset($_GET['extents']) ? $_GET['extents'] : "200000,4400000,710000,4900000";
+$zoom     = isset($_GET['zoom']) ? $_GET['zoom'] : 0;
+$showSiteLabel = isset($_GET["sitelabel"]);
+$var = isset($_GET['var']) ? $_GET["var"]: "pday";
+
+function click2geo($oextents, $click_x, $click_y, $imgsz_x, $imgsz_y, $zoom) {                                                                              
+  $arExtents = explode(",", $oextents);
+  $ll_x = $arExtents[0];
+  $ll_y = $arExtents[1];
+  $ur_x = $arExtents[2];
+  $ur_y = $arExtents[3];
+//  print_r($arExtents);
+                                                                              
+  $dy = ($ur_y - $ll_y) / floatval($imgsz_y);
+  $dx = ($ur_x - $ll_x) / floatval($imgsz_x);
+                                                                              
+  $centerX = ($click_x * $dx) + $ll_x ;
+  $centerY = $ur_y - ($click_y * $dy) ;
+                                                                              
+  if (intval($zoom) < 0)
+    $zoom = -1 / intval($zoom) ;
+                                                                              
+  $n_ll_x = $centerX - (($dx * $zoom) * ($imgsz_x / 2.00));
+  $n_ur_x = $centerX + (($dx * $zoom) * ($imgsz_x / 2.00));
+  $n_ll_y = $centerY - (($dy * $zoom) * ($imgsz_y / 2.00));
+  $n_ur_y = $centerY + (($dy * $zoom) * ($imgsz_y / 2.00));
+                                                                              
+  return $n_ll_x .",". $n_ll_y .",". $n_ur_x .",". $n_ur_y ;
+}
+
+$imgwidth = 640;
+$imgheight = 480;
+$oextents = isset($_GET['extents']) ? $_GET['extents'] : "200000,4400000,710000,4900000";
+
+if ( $zoom == 0 ){ // Full Extents
+  unset($_GET["img_x"]);
+  $oextents = "200000,4400000,710000,4900000";
+}
+
+if ( isset($_GET['img_x']) && strlen($_GET['img_x']) > 0 ){
+	$extents = click2geo($oextents, $_GET['img_x'], $_GET['img_y'],
+	$imgwidth, $imgheight, $zoom);
+} 
+else {
+   $extents = $oextents;
+}
+
+
+$formStr = "";
+$cgiStr = "";
+
+if ($showSiteLabel)
+{
+  $cgiStr .= "sitelabel=show&";
+}
+
+
+$varDef = Array(
+  "pday" => "Today's Precip",
+);
+
+
+function sel($svar, $var, $txt){
+  echo "<option value='".$var."' ";
+  if ($var == $svar) echo "SELECTED";
+  echo ">". $txt ."</option>\n";
+}
+
+$lstr = implode("&layers[]=", $layers);
+$mapurl =  "map.php?layers[]=$lstr&zoom=1&year=$year&month=$month&day=$day&extents=$extents&var=$var&$cgiStr";
+
+
+?>
+
+<html>
+<head>
+  <title>CoCoRaHS Observation Mapper</title>
+<script Language="JavaScript">
+<!--
+ function resetButtons(){
+   document.panButton.src = 'images/button_pan_off.png';
+   document.zoominButton.src = 'images/button_zoomin_off.png';
+   document.zoomoutButton.src = 'images/button_zoomout_off.png';
+   document.zoomfullButton.src = 'images/button_zoomfull_off.png';
+   document.saveButton.src = 'images/button_save_off.png';
+ }
+
+var sURL = unescape(window.location.pathname);
+
+//-->
+</script>
+  <style type="text/css" media="screen">@import "css/main.css";</style>
+</head>
+<body>
+
+<table style="float: left; align: left;">
+ <tr>
+   <td bgcolor="#EEEEEE" valign="top" rowspan="2">
+<form method="GET" action="map.phtml" name="myform">
+
+<input type="hidden" name="extents" value="<?php echo $extents; ?>">
+<input type="hidden" name="zoom" value="1">
+<?php echo $formStr; ?>
+
+<b>- Map Controls:</b><br />
+<img src="images/button_zoomin_off.png" name="zoominButton" alt="Zoom In"
+  onClick="javascript: resetButtons(); document.zoominButton.src = 'images/button_zoomin_on.png'; document.myform.zoom.value = -2;">
+<img src="images/button_pan_on.png" name="panButton" alt="Pan"
+  onClick="javascript: resetButtons(); document.panButton.src = 'images/button_pan_on.png'; document.myform.zoom.value = 1;">
+<img src="images/button_zoomout_off.png" name="zoomoutButton" alt="Zoom Out"
+  onClick="javascript: resetButtons(); document.zoomoutButton.src = 'images/button_zoomout_on.png'; document.myform.zoom.value = 2;">
+<img src="images/button_zoomfull_off.png" name="zoomfullButton" alt="Zoom Full"
+  onClick="document.myform.zoom.value = 0; document.myform.submit(); ">
+<a href="<?php echo $mapurl; ?>&download=yes"><img src="images/button_save_off.png" name="saveButton" alt="Save Image" onClick="javascript: resetButtons();" border="0"></a>
+
+<br /><input type="submit" value="Set Map Date" onclick="javascript: setLayerDisplay('timewindow', 'block'); return false;">
+
+<div id="timewindow" style="z-index: 3; position: absolute; top: 150px; left: 250px; width: 400px; display: none; background-color: #eee; padding: 5px; border: 1px dashed #000;">
+<strong>Time Options</strong> (<a href="javascript: setLayerDisplay('timewindow', 'none');">Close</a>)
+<div style="margin-left: 20px;">Select a date after 1 August 2007
+
+<table>
+<tr><th>Month:</th><th>Day:</th><th>Year:</th></tr>
+<tr>
+<td><?php echo monthSelect($month); ?></td>
+<td><?php echo daySelect($day); ?></td>
+<td><?php echo yearSelect(2007, $year, "year"); ?></td>
+</tr>
+</table></div>
+<br /><input type="submit" value="Make Changes">
+</div>
+<!-- End of That box -->
+
+<script LANGUAGE="JavaScript1.2" type="text/javascript">
+//<!--
+function setLayerDisplay( layerName, d ) {
+  if ( document.getElementById ) {
+ 
+    var w = document.getElementById(layerName);
+    w.style.display = d;
+  }
+}
+-->
+</script>
+
+<br /><b>- Select Plot Variable:</b>
+<br /><select name="var">
+       <?php
+          sel($var, "pday", "Today Rainfall");
+        ?>
+     </select>
+
+
+<br /><input type="checkbox" value="show" name="sitelabel" <?php if ($showSiteLabel) echo "checked=\"checked\""; ?>>Show Site Labels
+<input type="hidden" value="bogus" name="layers[]">
+
+<br /><input type="submit" value="Generate Map">
+
+<br /><b>- Special Options:</b>
+<br /><input type="submit" value="I need help!" onclick="javascript: setLayerDisplay('helpwindow', 'block'); return false;">
+
+
+   </td>
+	</tr>
+	<tr>
+<td valign="top">
+<div id="imgmain" style="z-index: 1;"><img name="mymap" src="<?php echo $mapurl; ?>" width="640" height="480"></div>
+<div id="imgmain2" style="margin-top: -480px; z-index: 2;"><input type="image" name="img" src="images/trans640x480.png" width="640" height="480"></div>
+<div class="ftext">
+<?php if (strlen($ERROR) > 0) { ?>
+<div style="background: #ff0; color: #f00; border: #000 dashed 1px;">
+<?php echo $ERROR; ?>
+</div>
+<?php } ?>
+</td>
+</tr>
+
+</table>
+
+<!-- Help Window -->
+<div id="helpwindow" style="position: absolute; top: 100px; left: 200px; width: 500px; display: none; background-color: #eee; padding: 5px; border: 1px dashed #000; text-align: left;">
+<strong>Help Window</strong> (<a href="javascript: setLayerDisplay('helpwindow', 'none');">Close</a>)
+<br /><b>Map Controls</b>
+<br /><img src="images/button_zoomin_off.png">Click this icon and then the map to zoom the map in by a factor of 2.
+<br /><img src="images/button_pan_off.png">Click this icon and then the map to recenter the map where you clicked.
+<br /><img src="images/button_zoomout_off.png">Click this icon and then the map to zoom the map out by a factor of 2.
+<br /><img src="images/button_zoomfull_off.png">Click to return to default scale.
+<br /><img src="images/button_save_off.png">Click to save the image to your desktop.
+
+<br /><b>Select Plot Variable:</b> allows you to control the observed variable that is plotted from the CoCoRaHS network.
+
+</div>
+
+</body>
+</html>
