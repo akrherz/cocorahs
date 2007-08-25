@@ -33,7 +33,7 @@
 </div>
 
 <br />&nbsp;<br />
-<h3>Homepage for Iowa</h3>
+<h3><?php echo (isset($TITLE) ? $TITLE: "Homepage for Iowa"); ?></h3>
 
 			</TD>
 	</TR>

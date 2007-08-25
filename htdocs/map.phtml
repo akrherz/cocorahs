@@ -6,7 +6,7 @@ include("../config/settings.inc.php");
 include("$rootpath/include/forms.php");
 
 $ERROR = "";
-$layers = isset($_GET["layers"]) ? $_GET["layers"] : Array("obs");
+$layers = isset($_GET["layers"]) ? $_GET["layers"] : Array("counties", "cities", "roads");
 $year = isset($_GET["year"]) ? $_GET["year"] : date("Y");
 $month = isset($_GET["month"]) ? $_GET["month"] : date("m");
 $day = isset($_GET["day"]) ? $_GET["day"] : date("d");
@@ -14,6 +14,9 @@ $extents = isset($_GET['extents']) ? $_GET['extents'] : "200000,4400000,710000,4
 $zoom     = isset($_GET['zoom']) ? $_GET['zoom'] : 0;
 $showSiteLabel = isset($_GET["sitelabel"]);
 $var = isset($_GET['var']) ? $_GET["var"]: "pday";
+$res = isset($_GET['res']) ? $_GET['res']: "640x480";
+
+list($width,$height) = explode("x", $res);
 
 function click2geo($oextents, $click_x, $click_y, $imgsz_x, $imgsz_y, $zoom) {                                                                              
   $arExtents = explode(",", $oextents);
@@ -40,8 +43,8 @@ function click2geo($oextents, $click_x, $click_y, $imgsz_x, $imgsz_y, $zoom) {
   return $n_ll_x .",". $n_ll_y .",". $n_ur_x .",". $n_ur_y ;
 }
 
-$imgwidth = 640;
-$imgheight = 480;
+$width = 640;
+$height = 480;
 $oextents = isset($_GET['extents']) ? $_GET['extents'] : "200000,4400000,710000,4900000";
 
 if ( $zoom == 0 ){ // Full Extents
@@ -51,7 +54,7 @@ if ( $zoom == 0 ){ // Full Extents
 
 if ( isset($_GET['img_x']) && strlen($_GET['img_x']) > 0 ){
 	$extents = click2geo($oextents, $_GET['img_x'], $_GET['img_y'],
-	$imgwidth, $imgheight, $zoom);
+	$width, $height, $zoom);
 } 
 else {
    $extents = $oextents;
@@ -79,14 +82,12 @@ function sel($svar, $var, $txt){
 }
 
 $lstr = implode("&layers[]=", $layers);
-$mapurl =  "map.php?layers[]=$lstr&zoom=1&year=$year&month=$month&day=$day&extents=$extents&var=$var&$cgiStr";
+$mapurl =  "map.php?layers[]=$lstr&zoom=1&year=$year&month=$month&day=$day&extents=$extents&var=$var&res=$res&$cgiStr";
 
-
+$TITLE = "Iowa CoCoRaHS Observation Mapping";
+include("$rootpath/include/header.php");
 ?>
 
-<html>
-<head>
-  <title>CoCoRaHS Observation Mapper</title>
 <script Language="JavaScript">
 <!--
  function resetButtons(){
@@ -96,16 +97,20 @@ $mapurl =  "map.php?layers[]=$lstr&zoom=1&year=$year&month=$month&day=$day&exten
    document.zoomfullButton.src = 'images/button_zoomfull_off.png';
    document.saveButton.src = 'images/button_save_off.png';
  }
+function setLayerDisplay( layerName, d ) {
+  if ( document.getElementById ) {
+ 
+    var w = document.getElementById(layerName);
+    w.style.display = d;
+  }
+}
 
 var sURL = unescape(window.location.pathname);
 
 //-->
 </script>
-  <style type="text/css" media="screen">@import "css/main.css";</style>
-</head>
-<body>
 
-<table style="float: left; align: left;">
+<table style="float: left; align: left;" width="100%">
  <tr>
    <td bgcolor="#EEEEEE" valign="top" rowspan="2">
 <form method="GET" action="map.phtml" name="myform">
@@ -125,7 +130,7 @@ var sURL = unescape(window.location.pathname);
   onClick="document.myform.zoom.value = 0; document.myform.submit(); ">
 <a href="<?php echo $mapurl; ?>&download=yes"><img src="images/button_save_off.png" name="saveButton" alt="Save Image" onClick="javascript: resetButtons();" border="0"></a>
 
-<br /><input type="submit" value="Set Map Date" onclick="javascript: setLayerDisplay('timewindow', 'block'); return false;">
+<p><input type="submit" value="Set Map Date" onclick="javascript: setLayerDisplay('timewindow', 'block'); return false;">
 
 <div id="timewindow" style="z-index: 3; position: absolute; top: 150px; left: 250px; width: 400px; display: none; background-color: #eee; padding: 5px; border: 1px dashed #000;">
 <strong>Time Options</strong> (<a href="javascript: setLayerDisplay('timewindow', 'none');">Close</a>)
@@ -143,32 +148,33 @@ var sURL = unescape(window.location.pathname);
 </div>
 <!-- End of That box -->
 
-<script LANGUAGE="JavaScript1.2" type="text/javascript">
-//<!--
-function setLayerDisplay( layerName, d ) {
-  if ( document.getElementById ) {
- 
-    var w = document.getElementById(layerName);
-    w.style.display = d;
-  }
-}
--->
-</script>
-
-<br /><b>- Select Plot Variable:</b>
+<p><b>- Select Plot Variable:</b>
 <br /><select name="var">
        <?php
           sel($var, "pday", "Today Rainfall");
         ?>
      </select>
 
+<p><strong>Map size</strong>
+<br /><select name="res">
+<?php
+  sel($res, "640x480", "640 x 480");
+  sel($res, "1024x768", "1024 x 768");
+  sel($res, "1280x1024", "1280 x 1024");
+?>
+</select>
+
+<p><strong>Map layers</strong>
+<input type="hidden" value="bogus" name="layers[]">
 
 <br /><input type="checkbox" value="show" name="sitelabel" <?php if ($showSiteLabel) echo "checked=\"checked\""; ?>>Show Site Labels
-<input type="hidden" value="bogus" name="layers[]">
+<br /><input type="checkbox" value="counties" name="layers[]" <?php if (in_array("counties", $layers) ) echo "checked=\"checked\""; ?>>Counties
+<br /><input type="checkbox" value="cities" name="layers[]" <?php if (in_array("cities", $layers) ) echo "checked=\"checked\""; ?>>Cities
+<br /><input type="checkbox" value="roads" name="layers[]" <?php if (in_array("roads", $layers) ) echo "checked=\"checked\""; ?>>Roads
 
 <br /><input type="submit" value="Generate Map">
 
-<br /><b>- Special Options:</b>
+<p><b>- Special Options:</b>
 <br /><input type="submit" value="I need help!" onclick="javascript: setLayerDisplay('helpwindow', 'block'); return false;">
 
 
@@ -176,8 +182,8 @@ function setLayerDisplay( layerName, d ) {
 	</tr>
 	<tr>
 <td valign="top">
-<div id="imgmain" style="z-index: 1;"><img name="mymap" src="<?php echo $mapurl; ?>" width="640" height="480"></div>
-<div id="imgmain2" style="margin-top: -480px; z-index: 2;"><input type="image" name="img" src="images/trans640x480.png" width="640" height="480"></div>
+<div id="imgmain" style="z-index: 1;"><img name="mymap" src="<?php echo $mapurl; ?>"></div>
+<div id="imgmain2" style="margin-top: -480px; z-index: 2;"><input type="image" name="img" src="images/trans640x480.png" width="<?php echo $width; ?>" height="<?php echo $height; ?>"></div>
 <div class="ftext">
 <?php if (strlen($ERROR) > 0) { ?>
 <div style="background: #ff0; color: #f00; border: #000 dashed 1px;">
@@ -203,5 +209,4 @@ function setLayerDisplay( layerName, d ) {
 
 </div>
 
-</body>
-</html>
+<?php include("$rootpath/include/footer.php"); ?>

@@ -4,7 +4,7 @@ include("../config/settings.inc.php");
 include("$rootpath/include/forms.php");
 include("$rootpath/include/database.inc.php");
 include("$rootpath/include/network.php");
-dl("php_mapscript_461.so");
+dl($mapscript);
 
 $ERROR = "";
 $layers = isset($_GET["layers"]) ? $_GET["layers"] : Array();
@@ -13,8 +13,10 @@ $month = isset($_GET["month"]) ? $_GET["month"] : date("m");
 $day = isset($_GET["day"]) ? $_GET["day"] : date("d");
 $ts = mktime(0,0,0,$month, $day, $year);
 $showSiteLabel = isset($_GET["sitelabel"]);
-$imgwidth = isset($_GET['width']) ? $_GET['width'] : 640;
-$imgheight = isset($_GET['height']) ? $_GET['height'] : 480;
+$res = isset($_GET['res']) ? $_GET['res']: "640x480";
+
+list($width,$height) = explode("x", $res);
+
 
  /**
   * Something simple to enable click interface on a PHP mapcript
@@ -26,7 +28,6 @@ function click2geo($oextents, $click_x, $click_y, $imgsz_x, $imgsz_y, $zoom) {
   $ll_y = $arExtents[1];
   $ur_x = $arExtents[2];
   $ur_y = $arExtents[3];
-//  print_r($arExtents);
                                                                               
   $dy = ($ur_y - $ll_y) / floatval($imgsz_y);
   $dx = ($ur_x - $ll_x) / floatval($imgsz_x);
@@ -62,7 +63,6 @@ $var = isset($_GET['var']) ? $_GET['var'] : 'pday';
 
 // Get station table dictionary
 $nt = new NetworkTable("IACOCORAHS");
-
 // Get obs for date
 $conn = iemdb("access");
 $obs = Array();
@@ -99,58 +99,64 @@ $rnd = Array("tmpf" => 0,
 
 $map = ms_newMapObj("../data/gis/base.map");
 $map->setProjection("init=epsg:26915");
-$map->set("height", 480);
-$map->set("width", 640);
+$map->set("height", $height);
+$map->set("width", $width);
 
 $arExtents = explode(",", $extents);
 $map->setextent($arExtents[0], $arExtents[1], $arExtents[2], $arExtents[3]);
 
 $counties = $map->getlayerbyname("counties");
-$counties->set("status", MS_ON);
+$counties->set("status", in_array("counties", $layers) );
 
-$snet = $map->getlayerbyname("snet");
-$snet->set("status", MS_ON);
-$sclass = $snet->getClass(0);
+$datalayer = $map->getlayerbyname("datalayer");
+$datalayer->set("status", MS_ON);
+$sclass = $datalayer->getClass(0);
 
 $cities = $map->getlayerbyname("cities");
-$cities->set("status", 1);
+$cities->set("status", in_array("cities", $layers) );
 
 $states = $map->getlayerbyname("states");
 $states->set("status", 1);
 
+$dot = $map->getlayerbyname("dot");
+$dot->set("status", 1);
 
   $interstates = $map->getlayerbyname("interstates");
-  $interstates->set("status", 1);
+  $interstates->set("status", in_array("roads", $layers) );
 
   $roads = $map->getlayerbyname("roads");
-  $roads->set("status", 1);
+  $roads->set("status", in_array("roads", $layers) );
 
   $ilbl = $map->getlayerbyname("interstates_label");
-  $ilbl->set("status", 1);
+  $ilbl->set("status", in_array("roads", $layers) );
 
   $rlbl = $map->getlayerbyname("roads_label");
-  $rlbl->set("status", 1);
+  $rlbl->set("status", in_array("roads", $layers) );
 
 
 
-$bar = $map->getlayerbyname("barlsd");
-$bar->set("status", 1);
-$subbar = $map->getlayerbyname("subtitlebar");
-$subbar->set("status", 1);
 
 
 $img = $map->prepareImage();
 $cities->draw($img);
 
-$map->drawLabelCache($img);
 
 $roads->draw($img);
 $interstates->draw($img);
 $rlbl->draw($img);
 $ilbl->draw($img);
-
 $counties->draw($img);
+
+
 $states->draw($img);
+
+
+$layer = $map->getLayerByName("credits");
+$point = ms_newpointobj();
+$point->setXY(70, $height - 45);
+$point->draw($map, $layer, $img, "credits", "    ". $varDef[$var] ." reported on ". $titlets );
+$point->free();
+
 
 foreach($obs as $key => $value){
 
@@ -161,27 +167,33 @@ foreach($obs as $key => $value){
   {
    $pt = ms_newPointObj();
    $pt->setXY($lon, $lat, 0);
-   $pt->draw($map, $snet, $img, 1, $value["short"] );
+   $pt->draw($map, $datalayer, $img, 1, $value["short"] );
    $pt->free();
   }
 
-     $pt = ms_newPointObj();
-     $pt->setXY($lon, $lat, 0);
-     $pt->draw($map, $snet, $img, 0, round($value[$var], $rnd[$var]) );
-     $pt->free();
+  $pt = ms_newPointObj();
+  $pt->setXY($lon, $lat, 0);
+  $pt->draw($map, $datalayer, $img, 0, round($value[$var], $rnd[$var]) );
+  $pt->free();
+
+  $pt = ms_newPointObj();
+  $pt->setXY($lon, $lat, 0);
+  $pt->draw($map, $dot, $img, 0, "");
+  $pt->free();
 }
 //  $ts = strftime("%I %p");
 
 
-//$map->drawLabelCache($img);
-$bar->draw($img);
 
+$map->drawLabelCache($img);
 
-
-$layer = $map->getLayerByName("credits");
+$layer = $map->getLayerByName("logo");
 $point = ms_newpointobj();
-$point->setXY(330, 48);
-$point->draw($map, $layer, $img, "credits", $varDef[$var] ." reported on ". $titlets );
+$point->setXY(45, $height - 45);
+$point->draw($map, $layer, $img, "logo", "");
+$point->free();
+
+
 
 if (isset($_GET["download"]))
 {
