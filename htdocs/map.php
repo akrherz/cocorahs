@@ -66,7 +66,7 @@ $nt = new NetworkTable("IACOCORAHS");
 // Get obs for date
 $conn = iemdb("access");
 $obs = Array();
-$sql = "SELECT station, pday from summary_$year WHERE day = '". date("Y-m-d", $ts) ."' and network = 'IACOCORAHS' and pday >= 0";
+$sql = "SELECT * from summary_$year WHERE day = '". date("Y-m-d", $ts) ."' and network = 'IACOCORAHS' and pday >= 0";
 $rs = pg_query($conn, $sql);
 for( $i=0; $row = @pg_fetch_assoc($rs,$i); $i++)
 {
@@ -87,6 +87,7 @@ if (strlen($var) == 0){
 
 $varDef = Array(
   "pday" => "24-hour rainfall",
+  "snow" => "24-hour snowfall",
 );
 
 $rnd = Array("tmpf" => 0,
@@ -95,6 +96,7 @@ $rnd = Array("tmpf" => 0,
   "max_sknt" => 0,
   "feel" => 0,
   "pmonth" => 2,
+  "snow" => 1,
   "pday" => 2);
 
 $map = ms_newMapObj("../data/gis/base.map");

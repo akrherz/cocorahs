@@ -72,6 +72,7 @@ if ($showSiteLabel)
 
 $varDef = Array(
   "pday" => "Today's Precip",
+  "snow" => "Today's Snowfall",
 );
 
 
@@ -152,6 +153,7 @@ var sURL = unescape(window.location.pathname);
 <br /><select name="var">
        <?php
           sel($var, "pday", "Today Rainfall");
+          sel($var, "snow", "Today Snowfall");
         ?>
      </select>
 
