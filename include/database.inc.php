@@ -1,6 +1,6 @@
 <?php
 //$iem40 = '10.10.10.40';
-$iem20 = '10.10.10.20';
+$iem20 = 'iemdb';
 //$iem30 = '10.10.10.30';
 //$iem20 = 'localhost';
 global $_DATABASES;
