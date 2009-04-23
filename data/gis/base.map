@@ -1,3 +1,4 @@
+MAP
 # base.map
 
 
@@ -62,7 +63,7 @@ WEB
   FOOTER q_footer.html
   MINSCALE 90000
   MAXSCALE 40000000
-  IMAGEPATH "/mesonet/www/html/tmp/"
+  IMAGEPATH "/var/www/html/tmp/"
   IMAGEURL "/tmp/"
   LOG "/tmp/fancy.log"
 END
