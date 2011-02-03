@@ -4,7 +4,7 @@ include("../config/settings.inc.php");
 include("$rootpath/include/forms.php");
 include("$rootpath/include/database.inc.php");
 include("$rootpath/include/network.php");
-dl($mapscript);
+
 
 $ERROR = "";
 $layers = isset($_GET["layers"]) ? $_GET["layers"] : Array();
