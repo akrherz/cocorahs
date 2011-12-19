@@ -66,11 +66,12 @@ $nt = new NetworkTable("IACOCORAHS");
 // Get obs for date
 $conn = iemdb("access");
 $obs = Array();
-$sql = "SELECT * from summary_$year WHERE day = '". date("Y-m-d", $ts) ."' and network = 'IACOCORAHS' and pday >= 0";
+$sql = "SELECT * from summary_$year s JOIN stations t ON (t.iemid = s.iemid) 
+  WHERE day = '". date("Y-m-d", $ts) ."' and t.network = 'IACOCORAHS' and pday >= 0";
 $rs = pg_query($conn, $sql);
 for( $i=0; $row = @pg_fetch_assoc($rs,$i); $i++)
 {
-   $id = $row["station"];
+   $id = $row["id"];
    if (! array_key_exists($id, $nt->table)) continue;
    $obs[ $id ] = $row;
    $obs[ $id ]["lat"] = $nt->table[$id]["latitude"];
