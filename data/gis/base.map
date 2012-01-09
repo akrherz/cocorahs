@@ -5,11 +5,11 @@ MAP
 NAME base
 STATUS ON
 SIZE 450 350
-FONTSET "/mesonet/data/gis/static/fonts/fonts.list"
+FONTSET "./fonts.list"
 EXTENT 200000 4400000 710000 4900000
 UNITS METERS
 SHAPEPATH "./"
-SYMBOLSET "/mesonet/data/gis/static/symbols/stations.sym"
+SYMBOLSET "./stations.sym"
 #TRANSPARENT off
 #INTERLACE off
 IMAGECOLOR 140 144 90
@@ -31,14 +31,7 @@ OUTPUTFORMAT
 	IMAGEMODE RGB
 	TRANSPARENT OFF
 END
-OUTPUTFORMAT
-	NAME jpeg
-	MIMETYPE "image/jpeg"
-	DRIVER "GD/JPEG"
-	IMAGEMODE RGB
-	FORMATOPTION "QUALITY=80"
-	TRANSPARENT OFF
-END
+
 
 #
 PROJECTION
@@ -77,15 +70,15 @@ LAYER
   CLASS
     NAME 'credits'
     LABEL
-      BACKGROUNDCOLOR 0 0 0
+      #BACKGROUNDCOLOR 0 0 0
       COLOR 250 250 250
-      BACKGROUNDSHADOWCOLOR 0 0 0
-      BACKGROUNDSHADOWSIZE 1 1
+      #BACKGROUNDSHADOWCOLOR 0 0 0
+      #BACKGROUNDSHADOWSIZE 1 1
       SHADOWCOLOR 0 0 0
       TYPE TRUETYPE
       SIZE 14
       BUFFER 4
-      FONT 'kcci'
+      FONT 'liberation-bold'
       POSITION CR
       FORCE TRUE
       PARTIALS TRUE
@@ -226,7 +219,7 @@ LAYER
       MINSIZE 4
       MAXSIZE 18
       TYPE TRUETYPE
-      FONT kcci
+      FONT 'liberation-bold'
       ANTIALIAS TRUE
       BUFFER 2
       FORCE TRUE
@@ -245,7 +238,7 @@ LAYER
       MINSIZE 4
       MAXSIZE 18
       TYPE TRUETYPE
-      FONT kcci
+      FONT 'liberation-bold'
       ANTIALIAS true
       BUFFER 2
       FORCE TRUE
@@ -327,7 +320,7 @@ LAYER
     SYMBOL 'interstate_shield'
     LABEL
       TYPE TRUETYPE
-      FONT arialblk
+      FONT 'liberation-bold'
       POSITION CC
       MINDISTANCE 100
       MINFEATURESIZE 10
