@@ -157,8 +157,8 @@ $states->draw($img);
 $layer = $map->getLayerByName("credits");
 $point = ms_newpointobj();
 $point->setXY(70, $height - 45);
-$point->draw($map, $layer, $img, "credits", "    ". $varDef[$var] ." reported on ". $titlets );
-$point->free();
+$point->draw($map, $layer, $img, 0, "    ". $varDef[$var] ." reported on ". $titlets );
+//$point->free();
 
 
 foreach($obs as $key => $value){
@@ -171,18 +171,18 @@ foreach($obs as $key => $value){
    $pt = ms_newPointObj();
    $pt->setXY($lon, $lat, 0);
    $pt->draw($map, $datalayer, $img, 1, $value["short"] );
-   $pt->free();
+   //$pt->free();
   }
 
   $pt = ms_newPointObj();
   $pt->setXY($lon, $lat, 0);
   $pt->draw($map, $datalayer, $img, 0, round($value[$var], $rnd[$var]) );
-  $pt->free();
+  //$pt->free();
 
   $pt = ms_newPointObj();
   $pt->setXY($lon, $lat, 0);
   $pt->draw($map, $dot, $img, 0, "");
-  $pt->free();
+  //$pt->free();
 }
 //  $ts = strftime("%I %p");
 
@@ -193,8 +193,8 @@ $map->drawLabelCache($img);
 $layer = $map->getLayerByName("logo");
 $point = ms_newpointobj();
 $point->setXY(45, $height - 45);
-$point->draw($map, $layer, $img, "logo", "");
-$point->free();
+$point->draw($map, $layer, $img, 0, "");
+//$point->free();
 
 
 
