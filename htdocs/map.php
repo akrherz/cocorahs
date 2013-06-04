@@ -1,9 +1,9 @@
 <?php
 include("../config/settings.inc.php"); 
 
-include("$rootpath/include/forms.php");
-include("$rootpath/include/database.inc.php");
-include("$rootpath/include/network.php");
+include("../include/forms.php");
+include("../include/database.inc.php");
+include("../include/network.php");
 
 
 $ERROR = "";
@@ -124,21 +124,17 @@ $states->set("status", 1);
 $dot = $map->getlayerbyname("dot");
 $dot->set("status", 1);
 
-  $interstates = $map->getlayerbyname("interstates");
-  $interstates->set("status", in_array("roads", $layers) );
+$interstates = $map->getlayerbyname("interstates");
+$interstates->set("status", in_array("roads", $layers) );
 
-  $roads = $map->getlayerbyname("roads");
-  $roads->set("status", in_array("roads", $layers) );
+$roads = $map->getlayerbyname("roads");
+$roads->set("status", in_array("roads", $layers) );
 
-  $ilbl = $map->getlayerbyname("interstates_label");
-  $ilbl->set("status", in_array("roads", $layers) );
+$ilbl = $map->getlayerbyname("interstates_label");
+$ilbl->set("status", in_array("roads", $layers) );
 
-  $rlbl = $map->getlayerbyname("roads_label");
-  $rlbl->set("status", in_array("roads", $layers) );
-
-
-
-
+$rlbl = $map->getlayerbyname("roads_label");
+$rlbl->set("status", in_array("roads", $layers) );
 
 $img = $map->prepareImage();
 $cities->draw($img);

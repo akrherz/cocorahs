@@ -3,7 +3,7 @@ $expiry = 60*60*24*100; // 100 days
 session_start();
 
 include("../config/settings.inc.php"); 
-include("$rootpath/include/forms.php");
+include("../include/forms.php");
 
 $ERROR = "";
 $layers = isset($_GET["layers"]) ? $_GET["layers"] : Array("counties", "cities", "roads");
@@ -86,17 +86,17 @@ $lstr = implode("&layers[]=", $layers);
 $mapurl =  "map.php?layers[]=$lstr&zoom=1&year=$year&month=$month&day=$day&extents=$extents&var=$var&res=$res&$cgiStr";
 
 $TITLE = "Iowa CoCoRaHS Observation Mapping";
-include("$rootpath/include/header.php");
+include("../include/header.php");
 ?>
 
 <script Language="JavaScript">
 <!--
  function resetButtons(){
-   document.panButton.src = 'images/button_pan_off.png';
-   document.zoominButton.src = 'images/button_zoomin_off.png';
-   document.zoomoutButton.src = 'images/button_zoomout_off.png';
-   document.zoomfullButton.src = 'images/button_zoomfull_off.png';
-   document.saveButton.src = 'images/button_save_off.png';
+   document.panButton.src = '/images/button_pan_off.png';
+   document.zoominButton.src = '/images/button_zoomin_off.png';
+   document.zoomoutButton.src = '/images/button_zoomout_off.png';
+   document.zoomfullButton.src = '/images/button_zoomfull_off.png';
+   document.saveButton.src = '/images/button_save_off.png';
  }
 function setLayerDisplay( layerName, d ) {
   if ( document.getElementById ) {
@@ -211,4 +211,4 @@ var sURL = unescape(window.location.pathname);
 
 </div>
 
-<?php include("$rootpath/include/footer.php"); ?>
+<?php include("../include/footer.php"); ?>

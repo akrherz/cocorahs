@@ -279,7 +279,7 @@ LAYER
     COLOR 255 0 0
     SYMBOL 'circle'
     SIZE 4
-    OVERLAYSYMBOL 'circle'
+    OVERLAYSYMBOL "circle"
     OVERLAYSIZE 2
     OVERLAYCOLOR 0 0 0
   END
@@ -295,9 +295,9 @@ LAYER
  DATA "/mesonet/data/gis/static/shape/4326/us/interstates.shp"
  CLASS
     COLOR 255 0 0
-    SYMBOL 'circle'
+    SYMBOL "circle"
     SIZE 4
-    OVERLAYSYMBOL 'circle'
+    OVERLAYSYMBOL "circle"
     OVERLAYSIZE 2
     OVERLAYCOLOR 0 0 0
   END
