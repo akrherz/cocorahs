@@ -118,11 +118,11 @@ LAYER
 	NAME cities
 	STATUS OFF
 	TYPE	POLYGON
-	DATA	"/mesonet/data/gis/static/shape/26915/iowa/incorporated_cities_2000.shp"
+	DATA	"/mesonet/data/gis/static/shape/26915/iowa/incorporated_cities_2010.shp"
 	PROJECTION
 		"init=epsg:26915"
 	END
-	LABELITEM "NAME"
+	LABELITEM "NAME10"
 	LABELMAXSCALE 700000
 	MAXSCALE 1000000
 	LABELCACHE	ON
@@ -276,12 +276,14 @@ LAYER
   CLASSITEM "SIGNT1"
   CLASS
 	EXPRESSION /I/
-    COLOR 255 0 0
-    SYMBOL 'circle'
-    SIZE 4
-    OVERLAYSYMBOL "circle"
-    OVERLAYSIZE 2
-    OVERLAYCOLOR 0 0 0
+	STYLE
+	  COLOR 255 0 0
+      WIDTH 4
+    END
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+    END
   END
 END
 
@@ -295,11 +297,14 @@ LAYER
  DATA "/mesonet/data/gis/static/shape/4326/us/interstates.shp"
  CLASS
     COLOR 255 0 0
-    SYMBOL "circle"
-    SIZE 4
-    OVERLAYSYMBOL "circle"
-    OVERLAYSIZE 2
-    OVERLAYCOLOR 0 0 0
+	STYLE
+	  COLOR 255 0 0
+      WIDTH 4
+    END
+    STYLE
+      WIDTH 2
+      COLOR 0 0 0
+    END
   END
 END
 
@@ -344,21 +349,21 @@ LAYER
   END
   CLASS
     EXPRESSION /U/
-    SYMBOL "circle"
-    COLOR 0 0 0
-    SIZE 3
-    OVERLAYSYMBOL "circle"
-    OVERLAYCOLOR 250 250 250
-    OVERLAYSIZE 1
+    STYLE
+	  COLOR 0 0 0
+      WIDTH 3
+    END
+    STYLE
+      WIDTH 1
+      COLOR 250 250 250
+    END    
   END
   CLASS
     EXPRESSION /C|S/
-    SYMBOL "circle"
-    COLOR 0 0 0
-    SIZE 1
-    #OVERLAYSYMBOL "circle"
-    #OVERLAYCOLOR 250 250 250
-    #OVERLAYSIZE 1
+    STYLE
+      WIDTH 1
+      COLOR 0 0 0
+    END
   END
 END
 
