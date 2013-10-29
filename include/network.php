@@ -19,7 +19,8 @@ class NetworkTable {
 
   function load_network($network)
   {
-    $rs = pg_exec($this->dbconn, "SELECT *, x(geom) as longitude, y(geom) as latitude from stations WHERE network = '$network'");
+    $rs = pg_exec($this->dbconn, "SELECT *, ST_x(geom) as longitude, 
+    		ST_y(geom) as latitude from stations WHERE network = '$network'");
     for( $i=0; $row = @pg_fetch_array($rs,$i); $i++)
     {
       $this->table[ $row["id"] ] = $row;
