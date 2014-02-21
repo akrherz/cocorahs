@@ -102,8 +102,7 @@ $rnd = Array("tmpf" => 0,
 
 $map = ms_newMapObj("../data/gis/base.map");
 $map->setProjection("init=epsg:26915");
-$map->set("height", $height);
-$map->set("width", $width);
+$map->setSize($width, $height);
 
 $arExtents = explode(",", $extents);
 $map->setextent($arExtents[0], $arExtents[1], $arExtents[2], $arExtents[3]);
@@ -154,7 +153,6 @@ $layer = $map->getLayerByName("credits");
 $point = ms_newpointobj();
 $point->setXY(70, $height - 45);
 $point->draw($map, $layer, $img, 0, "    ". $varDef[$var] ." reported on ". $titlets );
-//$point->free();
 
 
 foreach($obs as $key => $value){
@@ -167,21 +165,16 @@ foreach($obs as $key => $value){
    $pt = ms_newPointObj();
    $pt->setXY($lon, $lat, 0);
    $pt->draw($map, $datalayer, $img, 1, $value["short"] );
-   //$pt->free();
   }
 
   $pt = ms_newPointObj();
   $pt->setXY($lon, $lat, 0);
   $pt->draw($map, $datalayer, $img, 0, round($value[$var], $rnd[$var]) );
-  //$pt->free();
 
   $pt = ms_newPointObj();
   $pt->setXY($lon, $lat, 0);
   $pt->draw($map, $dot, $img, 0, "");
-  //$pt->free();
 }
-//  $ts = strftime("%I %p");
-
 
 
 $map->drawLabelCache($img);
@@ -190,7 +183,6 @@ $layer = $map->getLayerByName("logo");
 $point = ms_newpointobj();
 $point->setXY(45, $height - 45);
 $point->draw($map, $layer, $img, 0, "");
-//$point->free();
 
 
 

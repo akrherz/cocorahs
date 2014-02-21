@@ -210,6 +210,8 @@ LAYER
    "init=epsg:4326"
   END
   CLASS
+  	STYLE
+  	END
     LABEL
       COLOR  255 255 0
       OUTLINECOLOR  0 0 0
@@ -228,6 +230,8 @@ LAYER
     END
   END
   CLASS
+  	STYLE
+  	END
     COLOR -1 -1 -1
     LABEL
       COLOR  255 255 255
@@ -257,9 +261,13 @@ LAYER
    "init=epsg:4326"
   END
   CLASS
-	SYMBOL 'circle'
-	COLOR 255 0 0
-	SIZE 6
+  	LABEL
+  	END
+  	STYLE
+		SYMBOL 'circle'
+		COLOR 255 0 0
+		SIZE 6
+	END
   END
 END
 
@@ -419,8 +427,12 @@ LAYER
   TRANSFORM FALSE
   LABELCACHE OFF
   CLASS
-    SYMBOL 'iem_logo'
-    COLOR 0 0 0
+  	LABEL
+  	END
+  	STYLE
+	    SYMBOL 'iem_logo'
+    	COLOR 0 0 0
+    END
   END
 END
 
