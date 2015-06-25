@@ -141,8 +141,8 @@ $cities->draw($img);
 
 $roads->draw($img);
 $interstates->draw($img);
-$rlbl->draw($img);
-$ilbl->draw($img);
+//$rlbl->draw($img);
+//$ilbl->draw($img);
 $counties->draw($img);
 
 
@@ -173,7 +173,7 @@ foreach($obs as $key => $value){
 
   $pt = ms_newPointObj();
   $pt->setXY($lon, $lat, 0);
-  $pt->draw($map, $dot, $img, 0, "");
+  $pt->draw($map, $dot, $img, 0);
 }
 
 
@@ -182,7 +182,7 @@ $map->drawLabelCache($img);
 $layer = $map->getLayerByName("logo");
 $point = ms_newpointobj();
 $point->setXY(45, $height - 45);
-$point->draw($map, $layer, $img, 0, "");
+$point->draw($map, $layer, $img, 0);
 
 
 
