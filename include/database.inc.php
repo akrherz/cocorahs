@@ -1,25 +1,8 @@
 <?php
-//$iem40 = '10.10.10.40';
-$iem20 = 'iemdb';
-//$iem30 = '10.10.10.30';
-//$iem20 = 'localhost';
 global $_DATABASES;
 $_DATABASES = Array(
- 'access' => "dbname=iem host=$iem20 user=nobody",
- 'hads' => "dbname=hads host=$iem20 user=nobody",
- 'asos' => "dbname=asos host=$iem20 user=nobody",
- 'coop' => "dbname=coop host=$iem20 user=nobody",
- 'awos' => "dbname=awos host=$iem20 user=nobody",
- 'rwis' => "dbname=rwis host=$iem20 user=nobody",
- 'rwis2' => "dbname=rwis2 host=$iem20 user=nobody",
- 'wepp' => "dbname=wepp host=$iem20 user=nobody",
- 'snet' => "dbname=snet host=$iem20 user=nobody",
- 'mesosite' => "dbname=mesosite host=$iem20 user=nobody",
- 'isuag' => "dbname=isuag host=$iem20 user=nobody",
- 'other' => "dbname=other host=$iem20 user=nobody",
- 'postgis' => "dbname=postgis host=$iem20 user=nobody",
- 'portfolio' => "dbname=portfolio host=meteor.geol.iastate.edu user=mesonet",
- 'scan' => "dbname=scan host=$iem20 user=nobody",
+ 'access' => "dbname=iem host=iemdb-iem.local user=nobody",
+ 'mesosite' => "dbname=mesosite host=iemdb-mesosite.local user=nobody",
 );
 
 function iemdb($DBKEY)
